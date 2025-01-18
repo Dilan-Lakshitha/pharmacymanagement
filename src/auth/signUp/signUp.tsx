@@ -5,7 +5,7 @@ export default function SignUpForm() {
 
     return (
         <Container maxWidth="xs">
-            <Card sx={{ p: 2, mt: 5, mb: 2, borderRadius: 2 }}>
+            <Card sx={{ p: 2, mt: 2, mb: 2, borderRadius: 2 }}>
                 <Box display="flex" justifyContent="center" alignItems="center" className="bg-gray">
                     <div className='flex flex-col space-y-4'>
                         <img src={Logo} alt="Logo" style={{ width: 'auto', height: '250px', alignItems: "center", justifyContent: "center" }} />
@@ -15,11 +15,19 @@ export default function SignUpForm() {
                             <TextField className='w-full'
                                 required
                                 id="standard-required"
-                                label="User Name"
+                                label="Pharmarcy Name"
                                 defaultValue="Input User Name"
                             />
                         </div>
-                        <div className='my-4'>
+                        <div className='my-4 pb-6'>
+                            <TextField className='w-full'
+                                required
+                                id="standard-required"
+                                label="Email"
+                                defaultValue="Input Password"
+                            />
+                        </div>
+                        <div className='my-4 pb-6'>
                             <TextField className='w-full'
                                 required
                                 id="standard-required"
@@ -27,18 +35,23 @@ export default function SignUpForm() {
                                 defaultValue="Input Password"
                             />
                         </div>
+                        <div className='my-4'>
+                            <TextField className='w-full'
+                                required
+                                id="standard-required"
+                                label="Confirm Password"
+                                defaultValue="Input Password"
+                            />
+                        </div>
                         <div>
                             <div className='mb-4'>
-                                <Button
+                                <Button  sx={{ backgroundColor: '#064e3b' }}
                                     className='w-full bg-green-900'
                                     variant="contained"
                                 >
-                                    Sign In
+                                    Sign up
                                 </Button>
                             </div>
-                            <label>Don't have an account?  <Button href="#text-buttons" color="primary">
-                                Sign up
-                            </Button></label>
                         </div>
                     </div>
                 </Box>

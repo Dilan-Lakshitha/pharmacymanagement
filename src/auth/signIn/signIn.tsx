@@ -15,7 +15,7 @@ export default function SignInForm() {
                             <TextField className='w-full'
                                 required
                                 id="standard-required"
-                                label="User Name"
+                                label="Pharmarcy Name"
                                 defaultValue="Input User Name"
                             />
                         </div>
@@ -29,10 +29,7 @@ export default function SignInForm() {
                         </div>
                         <div>
                             <div className='mb-4'>
-                                <Button
-                                    className='w-full bg-green-900'
-                                    variant="contained"
-                                >
+                                <Button sx={{ backgroundColor: '#064e3b' }}  className='w-full text-white' variant="contained">
                                     Sign In
                                 </Button>
                             </div>
