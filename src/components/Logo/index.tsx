@@ -5,7 +5,6 @@ import pharmacyLogo from '../../assets/logoOutline.png';
 const LogoWrapper = styled(Link)(
   ({ theme }) => `
         color: ${theme.palette.text.primary};
-        padding: ${theme.spacing(0, 1, 0, 0)};
         display: flex;
         align-items: center;
         text-decoration: none;
@@ -18,14 +17,13 @@ const LogoText = styled(Box)(
         font-size: ${theme.typography.pxToRem(30)};
         font-weight: ${theme.typography.fontWeightBold};
         color: white;
-        margin-left: ${theme.spacing(1)};
 `
 );
 
 function Logo() {
   return (
     <LogoWrapper to="/overview">
-      <img src={pharmacyLogo} alt="Logo" style={{ width: '200px', height: '80px' }} />
+      <img src={pharmacyLogo} alt="Logo" style={{ width: '200px', height: '100px' }} />
       <LogoText>MediCare</LogoText>
     </LogoWrapper>
   );

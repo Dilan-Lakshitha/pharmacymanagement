@@ -55,11 +55,11 @@ function Sidebar() {
         }}
       >
         <Scrollbar>
-          <Box mt={3}>
+          <Box mt={0}>
             <Box
-              mx={2}
+              mx={0}
               sx={{
-                width: 52
+                width: 100
               }}
             >
               <Logo />
@@ -67,19 +67,18 @@ function Sidebar() {
           </Box>
           <Divider
             sx={{
-              mt: theme.spacing(3),
               mx: theme.spacing(2),
               background: theme.colors.alpha.trueWhite[10]
             }}
           />
           <SidebarMenu />
         </Scrollbar>
-        <Divider
+        {/* <Divider
           sx={{
             background: theme.colors.alpha.trueWhite[10]
           }}
-        />
-        <Box p={2}>
+        /> */}
+        {/* <Box p={2}>
           <Button
             href="https://bloomui.com"
             target="_blank"
@@ -91,7 +90,7 @@ function Sidebar() {
           >
             Upgrade to PRO
           </Button>
-        </Box>
+        </Box> */}
       </SidebarWrapper>
       <Drawer
         sx={{
