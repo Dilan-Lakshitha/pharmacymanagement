@@ -16,8 +16,6 @@ export default function SignInForm() {
         const submitForm = async (payload:any) => {
             try {
                 const response = await dispath(signIn(payload)).unwrap();
-                localStorage.setItem("authToken", response.token); 
-
                 toast.success("Login successful! 🎉");
 
                 navigate("/overview"); 

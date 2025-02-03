@@ -1,4 +1,5 @@
 export interface UserModel {
+    userInfo:Users | null;
     loading: boolean;
     error: string | undefined;
     success: boolean;
@@ -9,4 +10,5 @@ export interface Users {
     PharmarcyName: string;
     email: string;
     phone: string;
+    avatar:string;
 }

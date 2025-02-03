@@ -130,10 +130,10 @@ const routes: RouteObject[] = [
               path: '',
               element: <Navigate to="details" replace />
             },
-            // {
-            //   path: 'details',
-            //   element: <UserProfile />
-            // },
+            {
+              path: 'details',
+              // element: <UserProfile />
+            },
             // {
             //   path: 'settings',
             //   element: <UserSettings />

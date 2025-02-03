@@ -1,9 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { jwtDecode } from "jwt-decode";
 import { UserModel } from "../../shared/models/user-model";
-import { de } from "date-fns/locale";
 import { signIn, signUp } from "../../shared/service/userSetting";
 
 const initialState:UserModel = {
+    userInfo:localStorage.getItem('authToken') ? jwtDecode(localStorage.getItem('authToken') as string) : null,
     loading: false,
     error: '',
     success: false,
@@ -14,6 +15,9 @@ const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
+        logout:(state)=>{
+            localStorage.removeItem('authToken');
+        },
         resetState: (state) => {
             state.loading = false;
             state.error = '';
@@ -41,6 +45,10 @@ const authSlice = createSlice({
             state.error = '';
         })
         .addCase(signIn.fulfilled,(state,payload:any ) => {
+            console.log(payload.payload.token);
+            if(payload.payload.token){
+               localStorage.setItem("authToken", payload.payload.token);
+            }
             state.loading = false;
             state.success = payload.success;
         })
