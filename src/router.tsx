@@ -36,18 +36,31 @@ const Buttons = Loader(
   const Cards = Loader(lazy(() => import('../src/content/pages/Components/Cards')));
   const Forms = Loader(lazy(() => import('../src/content/pages/Components/Forms')));
 
+  const isAuthenticated = () => {
+    return !!localStorage.getItem("authToken");
+  };
+  
+
 const routes: RouteObject[] = [
     {
       path: '',
       element: <BaseLayout />,
       children: [
         {
-          path: '/',
-          element: <SignInForm/>
+          path: "/",
+          element: isAuthenticated() ? <SidebarLayout /> : <Navigate to="/signIn" />,
         },
         {
-          path: 'signUp',
-          element: <SignUpForm/>
+          path: "/signIn",
+          element: <SignInForm />,
+        },
+        {
+          path: "/signUp",
+          element: <SignUpForm />,
+        },
+        {
+          path: "/overview",
+          element: isAuthenticated() ? <Navigate to="/" replace /> : <Navigate to="/signIn" />,
         },
         {
           path: 'status',
