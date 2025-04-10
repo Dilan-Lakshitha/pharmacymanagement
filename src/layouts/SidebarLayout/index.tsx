@@ -4,6 +4,8 @@ import { Outlet } from 'react-router-dom';
 
 import Sidebar from './Sidebar';
 import Header from './Header';
+import { Dashboard } from '@mui/icons-material';
+import Overview from '../../content/overview';
 
 interface SidebarLayoutProps {
   children?: ReactNode;
@@ -55,6 +57,7 @@ const SidebarLayout: FC<SidebarLayoutProps> = () => {
             }
           }}
         >
+            <Overview></Overview>
           <Box display="block">
             <Outlet />
           </Box>

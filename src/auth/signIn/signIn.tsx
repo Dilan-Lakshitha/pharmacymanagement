@@ -18,7 +18,7 @@ export default function SignInForm() {
                 const response = await dispath(signIn(payload)).unwrap();
                 toast.success("Login successful! 🎉");
 
-                navigate("/overview"); 
+                navigate("/"); 
             } catch (error) {
                 toast.error("Login failed. Please check your credentials.");
                 console.error("Login failed:", error);
@@ -27,7 +27,6 @@ export default function SignInForm() {
         
     return (
         <Container maxWidth="xs">
-            <Toaster richColors position="bottom-right" />
             <Card sx={{ p: 2, mt: 5, mb: 2, borderRadius: 2 }}>
                 <Box display="flex" justifyContent="center" alignItems="center" className="bg-gray">
                     <div className='flex flex-col space-y-4'>
@@ -40,7 +39,7 @@ export default function SignInForm() {
                                 id="pharmacyName"
                                 label="Pharmarcy Name"
                                 placeholder="pharmacy Name"
-                                {...register('PharmarcyName',{required:'Pharmacy Name is required'})}
+                                {...register('Pharmarcy_name',{required:'Pharmacy Name is required'})}
                             />
                         </div>
                         <div className='my-4'>

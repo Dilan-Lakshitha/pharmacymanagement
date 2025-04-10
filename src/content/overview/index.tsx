@@ -1,34 +1,14 @@
-import { Box, Container, Card } from '@mui/material';
-import { Helmet } from 'react-helmet-async';
+import {  Container, Card } from '@mui/material';
 
-import { styled } from '@mui/material/styles';
-import Logo from '../../components/LogoSign';
-import Hero from './Hero';
-
-const OverviewWrapper = styled(Box)(
-  () => `
-    overflow: auto;
-    flex: 1;
-    overflow-x: hidden;
-    align-items: center;
-`
-);
+import Dashboard from './Dashboard';
 
 function Overview() {
   return (
-    <OverviewWrapper>
-      <Helmet>
-        <title>Tokyo Free White React Typescript Admin Dashboard</title>
-      </Helmet>
-      <Container maxWidth="lg">
-        <Box display="flex" justifyContent="center" py={5} alignItems="center">
-          <Logo />
-        </Box>
-        <Card sx={{ p: 10, mb: 10, borderRadius: 12 }}>
-          <Hero />
+      <Container maxWidth="xl" className='mt-2'>
+        <Card sx={{ p: 2, mb: 10, borderRadius: 1 }}>
+          <Dashboard />
         </Card>
       </Container>
-    </OverviewWrapper>
   );
 }
 

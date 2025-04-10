@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../redux-store/stores/store';
 import { useForm } from 'react-hook-form';
 import { signUp } from '../../shared/service/userSetting';
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 
 export default function SignUpForm() {
     const { success } = useSelector((state: any) => state.auth);
@@ -35,7 +35,7 @@ export default function SignUpForm() {
                                 id="standard-required"
                                 label="Pharmarcy Name"
                                 placeholder="Pharmacy Name"
-                                {...register('pharmacyName',{required:'Pharmacy Name is required'})}
+                                {...register('pharmacy_name',{required:'Pharmacy Name is required'})}
                             />
                         </div>
                         <div className='my-4 pb-6'>
@@ -44,7 +44,7 @@ export default function SignUpForm() {
                                 id="standard-required"
                                 label="Email"
                                 placeholder="Email"
-                                {...register('email',{required:'Email is required'})}
+                                {...register('pharmacy_email',{required:'Email is required'})}
                             />
                         </div>
                         <div className='my-4 pb-6'>
@@ -54,6 +54,15 @@ export default function SignUpForm() {
                                 label="Password"
                                 placeholder="Password"
                                 {...register('password',{required:'Password is required'})}
+                            />
+                        </div>
+                        <div className='my-4 pb-6'>
+                            <TextField className='w-full'
+                                required
+                                id="standard-required"
+                                label="location"
+                                placeholder="location"
+                                {...register('location',{required:'location is required'})}
                             />
                         </div>
                         <div>

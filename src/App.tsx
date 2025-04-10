@@ -7,12 +7,15 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { CssBaseline } from '@mui/material';
 import ThemeProvider from './theme/ThemeProvider';
 import './index.css'
+import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from 'sonner';
 
 function App() {
   const content = useRoutes(router);
 
   return (
     <ThemeProvider>
+      <Toaster richColors position="bottom-right" />
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <CssBaseline />
         {content}

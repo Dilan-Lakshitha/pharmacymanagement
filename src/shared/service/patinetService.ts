@@ -1,15 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from 'axios';
+import { axiosApi } from "./userSetting";
 
-export const axiosApi = axios.create({
-    baseURL: 'http://localhost:7200/api'
-});
-
-export const signUp = createAsyncThunk(
-    'auth/signUp',
+export const patientRegister = createAsyncThunk(
+    'patinet/register',
     async (payload: any, { rejectWithValue }) => {
+        const api = axiosApi
         try {
-            const response = await axiosApi.post('Auth/register', payload);
+            const response = await api.post('Patinet/patinetRegister', payload);
             return response.data;
         } catch (error:any) {
             if (error.response) {
@@ -21,11 +18,12 @@ export const signUp = createAsyncThunk(
     }
 );
 
-export const signIn = createAsyncThunk(
-    'auth/signIn',
-    async (payload: any, { rejectWithValue }) => {
+export const patients = createAsyncThunk(
+    'patinets',
+    async (_, { rejectWithValue }) => {
+        const api = axiosApi
         try {
-            const response = await axiosApi.post('Auth/login', payload);
+            const response = await api.get('Patinet/patients');
             return response.data;
         } catch (error:any) {
             if (error.response) {
@@ -36,3 +34,4 @@ export const signIn = createAsyncThunk(
         }
     }
 );
+

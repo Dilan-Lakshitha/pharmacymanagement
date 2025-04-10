@@ -3,6 +3,7 @@ import authReducer from '../reducers/auth-reducer';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'; // Defaults to localStorage
 import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
+import patinetReducer from '../reducers/patinet-reducer';
 
 const persistConfig = {
   key: 'root',
@@ -14,6 +15,7 @@ const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 export const store = configureStore({
   reducer: {
     auth: persistedAuthReducer,
+    patinet:patinetReducer 
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
