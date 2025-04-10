@@ -16,13 +16,13 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
-import { AppDispatch } from "../../../redux-store/stores/store";
+import { AppDispatch } from "../../../../redux-store/stores/store";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { patientRegister, patients } from "../../../shared/service/patinetService";
+import { patientRegister, patients } from "../../../../shared/service/patinetService";
 import RecentOrdersTable from "./patinetTable";
 
-function Hero() {
+function PatientDashboard() {
   const { success } = useSelector((state: any) => state.auth);
   const dispath: AppDispatch = useDispatch();
   const {
@@ -148,4 +148,4 @@ function Hero() {
   );
 }
 
-export default Hero;
+export default PatientDashboard;
