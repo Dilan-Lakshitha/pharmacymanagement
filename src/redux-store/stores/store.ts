@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage'; // Defaults to localStorage
 import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import patinetReducer from '../reducers/patinet-reducer';
 import supplierReducer from '../reducers/supplier-reducer';
+import drugReducer from '../reducers/drug-reducer';
 
 
 const persistConfig = {
@@ -19,6 +20,7 @@ export const store = configureStore({
     auth: persistedAuthReducer,
     patinet:patinetReducer,
     supplier:supplierReducer,
+    drug: drugReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

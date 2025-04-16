@@ -11,6 +11,10 @@ import {
   TextField,
   Icon,
   Card,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormControl,
 } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { useEffect, useState } from "react";
@@ -19,18 +23,20 @@ import { AppDispatch } from "../../../../redux-store/stores/store";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
-  patientRegister,
-  patients,
-  Updatepatients,
-} from "../../../../shared/service/patinetService";
+  drugRegister,
+  drugs,
+  Updatedrugs,
+} from "../../../../shared/service/drugService";
 import DrugsTable from "./drugsTable";
+import { suppliers } from "../../../../shared/service/supplierService";
 
 function DrugsDashboard() {
   const { success } = useSelector((state: any) => state.auth);
-  const patientList = useSelector((state: any) => state.patinet.patinet);
+  const drugList = useSelector((state: any) => state.drug.drug);
+  const supplierList = useSelector((state: any) => state.supplier.supplier);
   const [open, setOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [selectedPatient, setSelectedPatient] = useState<any>(null);
+  const [selecteddrug, setSelecteddrug] = useState<any>(null);
 
   const dispath: AppDispatch = useDispatch();
   const {
@@ -42,17 +48,21 @@ function DrugsDashboard() {
   } = useForm({ mode: "onChange" });
 
   useEffect(() => {
-    dispath(patients());
+    dispath(drugs());
   }, [dispath]);
+
+  useEffect(() => {
+    dispath(suppliers());
+  }, []);
 
   const submitForm = async (data: any) => {
     try {
       if (isEditMode) {
-        dispath(Updatepatients({ ...selectedPatient, ...data }));
-        toast.success("Patient updated successfully! 🎉");
+        dispath(Updatedrugs({ ...selecteddrug, ...data }));
+        toast.success("drug updated successfully! 🎉");
       } else {
-        dispath(patientRegister(data));
-        toast.success("Patient added successfully! 🎉");
+        dispath(drugRegister(data));
+        toast.success("drug added successfully! 🎉");
       }
       handleClose();
     } catch {
@@ -61,14 +71,16 @@ function DrugsDashboard() {
   };
 
   useEffect(() => {
-    if (selectedPatient) {
-      setValue("customer_name", selectedPatient.customer_name);
-      setValue("customer_age", selectedPatient.customer_age);
-      setValue("customer_contact", selectedPatient.customer_contact);
+    if (selecteddrug) {
+      setValue("name", selecteddrug.name);
+      setValue("description", selecteddrug.description);
+      setValue("price", selecteddrug.price);
+      setValue("quantity", selecteddrug.quantity);
+      setValue("supplier_id", selecteddrug.supplier_id);
     } else {
       reset();
     }
-  }, [selectedPatient, setValue, reset]);
+  }, [selecteddrug, setValue, reset]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -76,19 +88,18 @@ function DrugsDashboard() {
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedPatient(null);
+    setSelecteddrug(null);
     setIsEditMode(false);
     reset();
   };
 
-  const handleEdit = (patient: any) => {
-    setSelectedPatient(patient);
+  const handleEdit = (drug: any) => {
+    setSelecteddrug(drug);
     setIsEditMode(true);
     setOpen(true);
   };
-  
 
-  console.log("patientList", patientList);
+  console.log("supplierList", supplierList);
 
   return (
     <Container maxWidth="xl" sx={{ textAlign: "center" }}>
@@ -101,12 +112,12 @@ function DrugsDashboard() {
               variant="contained"
               sx={{ backgroundColor: "#064e3b" }}
             >
-              Add Patinet
+              Add Drug
             </Button>
           </Box>
           <Grid item md={6}>
             <Card>
-            <DrugsTable Patinets={patientList || []} onEdit={handleEdit} />
+              <DrugsTable Drugs={drugList || []} onEdit={handleEdit} />
             </Card>
           </Grid>
         </Grid>
@@ -115,7 +126,7 @@ function DrugsDashboard() {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle sx={{ backgroundColor: "#064e3b", color: "white" }}>
           <PersonAddIcon sx={{ marginRight: 1 }} />
-          {isEditMode ? "Update Patient" : "Add Patient"}
+          {isEditMode ? "Update drug" : "Add drug"}
         </DialogTitle>
         <form
           onSubmit={handleSubmit(submitForm)}
@@ -123,47 +134,81 @@ function DrugsDashboard() {
         >
           <DialogContent>
             <DialogContentText>
-              Please fill out the form to add a new patient.
+              Please fill out the form to add a new drug.
             </DialogContentText>
             <TextField
               required
               autoFocus
               margin="dense"
-              id="patientName"
-              label="Patient Name"
+              id="drugName"
+              label="Drug Name"
               type="text"
               fullWidth
               variant="standard"
-              {...register("customer_name", {
-                required: "Patient Name is required",
+              {...register("name", {
+                required: "drug Name is required",
               })}
             />
             <TextField
               required
               margin="dense"
-              id="patientAge"
-              label="Patient Age"
-              type="number"
+              id="drugDescription"
+              label="Drug Description"
+              type="text"
               fullWidth
               variant="standard"
-              {...register("customer_age", {
-                required: "Patient Age is required",
-                valueAsNumber: true,
+              {...register("description", {
+                required: "drug description is required",
               })}
             />
             <TextField
               required
               autoFocus
               margin="dense"
-              id="patientContact"
-              label="Patient Contact Number"
-              type="text"
+              id="drugPrice"
+              label="Drug Price"
+              type="number"
               fullWidth
               variant="standard"
-              {...register("customer_contact", {
-                required: "Patient Name is required",
+              {...register("price", {
+                required: "drug price is required",
               })}
             />
+            <TextField
+              required
+              autoFocus
+              margin="dense"
+              id="drugQuantity"
+              label="Drug Quantity"
+              type="number"
+              fullWidth
+              variant="standard"
+              {...register("quantity", {
+                required: "drug quantity is required",
+              })}
+            />
+
+            <FormControl fullWidth margin="dense"  sx={{ mt: 3 }} required>
+              <InputLabel id="supplier-label">Select Supplier</InputLabel>
+              <Select
+                labelId="supplier-label"
+                id="supplier"
+                defaultValue=""
+                label="Select Supplier"
+                {...register("supplier_id", {
+                  required: "Supplier is required",
+                })}
+              >
+                {supplierList?.map((supplier: any) => (
+                  <MenuItem
+                    key={supplier.supplier_id}
+                    value={supplier.supplier_id}
+                  >
+                    {supplier.supplier_name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} sx={{ color: "#064e3b" }}>
@@ -172,7 +217,8 @@ function DrugsDashboard() {
             <Button
               type="submit"
               variant="contained"
-              sx={{ backgroundColor: "#064e3b" }}>
+              sx={{ backgroundColor: "#064e3b" }}
+            >
               {isEditMode ? "Update" : "Add"}
             </Button>
           </DialogActions>
