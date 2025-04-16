@@ -15,37 +15,60 @@ import {
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link as RouterLink } from "react-router-dom";
 import { AppDispatch } from "../../../../redux-store/stores/store";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { patientRegister, patients } from "../../../../shared/service/patinetService";
-import RecentOrdersTable from "./patinetTable";
+import {
+  patientRegister,
+  patients,
+  Updatepatients,
+} from "../../../../shared/service/patinetService";
+import PatinetTable from "./patinetTable";
 
 function PatientDashboard() {
   const { success } = useSelector((state: any) => state.auth);
+  const patientList = useSelector((state: any) => state.patinet.patinet);
+  const [open, setOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState<any>(null);
+
   const dispath: AppDispatch = useDispatch();
   const {
     register,
     handleSubmit,
+    setValue,
+    reset,
     formState: { isDirty, isValid, errors },
   } = useForm({ mode: "onChange" });
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     dispath(patients());
-  }
-  , []);
+  }, [dispath]);
 
-  const submitForm = async (payload: any) => {
+  const submitForm = async (data: any) => {
     try {
-      dispath(patientRegister(payload));
+      if (isEditMode) {
+        dispath(Updatepatients({ ...selectedPatient, ...data }));
+        toast.success("Patient updated successfully! 🎉");
+      } else {
+        dispath(patientRegister(data));
+        toast.success("Patient added successfully! 🎉");
+      }
       handleClose();
-      toast.success("Patient added successful! 🎉");
     } catch {
-      toast.error("Patient added failed. Please check your network.");
+      toast.error("Operation failed. Please check your network.");
     }
   };
+
+  useEffect(() => {
+    if (selectedPatient) {
+      setValue("customer_name", selectedPatient.customer_name);
+      setValue("customer_age", selectedPatient.customer_age);
+      setValue("customer_contact", selectedPatient.customer_contact);
+    } else {
+      reset();
+    }
+  }, [selectedPatient, setValue, reset]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -53,7 +76,19 @@ function PatientDashboard() {
 
   const handleClose = () => {
     setOpen(false);
+    setSelectedPatient(null);
+    setIsEditMode(false);
+    reset();
   };
+
+  const handleEdit = (patient: any) => {
+    setSelectedPatient(patient);
+    setIsEditMode(true);
+    setOpen(true);
+  };
+  
+
+  console.log("patientList", patientList);
 
   return (
     <Container maxWidth="xl" sx={{ textAlign: "center" }}>
@@ -71,7 +106,7 @@ function PatientDashboard() {
           </Box>
           <Grid item md={6}>
             <Card>
-              <RecentOrdersTable cryptoOrders={[]} />
+            <PatinetTable Patinets={patientList || []} onEdit={handleEdit} />
             </Card>
           </Grid>
         </Grid>
@@ -80,7 +115,7 @@ function PatientDashboard() {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle sx={{ backgroundColor: "#064e3b", color: "white" }}>
           <PersonAddIcon sx={{ marginRight: 1 }} />
-          Add Patient
+          {isEditMode ? "Update Patient" : "Add Patient"}
         </DialogTitle>
         <form
           onSubmit={handleSubmit(submitForm)}
@@ -137,9 +172,8 @@ function PatientDashboard() {
             <Button
               type="submit"
               variant="contained"
-              sx={{ backgroundColor: "#064e3b" }}
-            >
-              Add
+              sx={{ backgroundColor: "#064e3b" }}>
+              {isEditMode ? "Update" : "Add"}
             </Button>
           </DialogActions>
         </form>
@@ -147,5 +181,4 @@ function PatientDashboard() {
     </Container>
   );
 }
-
 export default PatientDashboard;

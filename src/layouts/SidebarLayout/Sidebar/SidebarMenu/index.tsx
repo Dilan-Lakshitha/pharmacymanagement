@@ -218,6 +218,8 @@ function SidebarMenu() {
                   Patinet
                 </Button>
               </ListItem>
+
+
               <ListItem component="div">
                 <Button
                   disableRipple
@@ -227,6 +229,18 @@ function SidebarMenu() {
                   startIcon={<MmsTwoToneIcon />}
                 >
                   Supplier
+                </Button>
+              </ListItem>
+
+              <ListItem component="div">
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/dashboard/drugs"
+                  startIcon={<MmsTwoToneIcon />}
+                >
+                  Drugs
                 </Button>
               </ListItem>
             </List>

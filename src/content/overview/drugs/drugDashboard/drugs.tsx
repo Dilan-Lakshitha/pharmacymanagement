@@ -9,6 +9,7 @@ import {
   DialogContentText,
   DialogTitle,
   TextField,
+  Icon,
   Card,
 } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -17,18 +18,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../../../../redux-store/stores/store";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import SupplierTable from "./supplierTable";
 import {
-  supplierRegister,
-  suppliers,
-} from "../../../../shared/service/supplierService";
+  patientRegister,
+  patients,
+  Updatepatients,
+} from "../../../../shared/service/patinetService";
+import DrugsTable from "./drugsTable";
 
-function SupplierDashboard() {
+function DrugsDashboard() {
   const { success } = useSelector((state: any) => state.auth);
-  const supplierList = useSelector((state: any) => state.supplier.supplier);
+  const patientList = useSelector((state: any) => state.patinet.patinet);
   const [open, setOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [selectedsupplier, setSelectedsupplier] = useState<any>(null);
+  const [selectedPatient, setSelectedPatient] = useState<any>(null);
+
   const dispath: AppDispatch = useDispatch();
   const {
     register,
@@ -39,34 +42,33 @@ function SupplierDashboard() {
   } = useForm({ mode: "onChange" });
 
   useEffect(() => {
-    dispath(suppliers());
-  }, []);
+    dispath(patients());
+  }, [dispath]);
 
-  const submitForm = async (payload: any) => {
+  const submitForm = async (data: any) => {
     try {
-      dispath(supplierRegister(payload));
+      if (isEditMode) {
+        dispath(Updatepatients({ ...selectedPatient, ...data }));
+        toast.success("Patient updated successfully! 🎉");
+      } else {
+        dispath(patientRegister(data));
+        toast.success("Patient added successfully! 🎉");
+      }
       handleClose();
-      toast.success("Supplier added successful! 🎉");
     } catch {
-      toast.error("Supplier added failed. Please check your network.");
+      toast.error("Operation failed. Please check your network.");
     }
   };
 
   useEffect(() => {
-    if (selectedsupplier) {
-      setValue("supplier_name", selectedsupplier.supplier_name);
-      setValue("email", selectedsupplier.email);
-      setValue("supplier_contact", selectedsupplier.supplier_contact);
+    if (selectedPatient) {
+      setValue("customer_name", selectedPatient.customer_name);
+      setValue("customer_age", selectedPatient.customer_age);
+      setValue("customer_contact", selectedPatient.customer_contact);
     } else {
       reset();
     }
-  }, [selectedsupplier, setValue, reset]);
-
-  const handleEdit = (supplier: any) => {
-    setSelectedsupplier(supplier);
-    setIsEditMode(true);
-    setOpen(true);
-  };
+  }, [selectedPatient, setValue, reset]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -74,10 +76,19 @@ function SupplierDashboard() {
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedsupplier(null);
+    setSelectedPatient(null);
     setIsEditMode(false);
     reset();
   };
+
+  const handleEdit = (patient: any) => {
+    setSelectedPatient(patient);
+    setIsEditMode(true);
+    setOpen(true);
+  };
+  
+
+  console.log("patientList", patientList);
 
   return (
     <Container maxWidth="xl" sx={{ textAlign: "center" }}>
@@ -90,19 +101,21 @@ function SupplierDashboard() {
               variant="contained"
               sx={{ backgroundColor: "#064e3b" }}
             >
-              Add Supplier
+              Add Patinet
             </Button>
           </Box>
-          <Card>
-            <SupplierTable Suppliers={supplierList || []} onEdit={handleEdit} />
-          </Card>
+          <Grid item md={6}>
+            <Card>
+            <DrugsTable Patinets={patientList || []} onEdit={handleEdit} />
+            </Card>
+          </Grid>
         </Grid>
       </Grid>
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle sx={{ backgroundColor: "#064e3b", color: "white" }}>
           <PersonAddIcon sx={{ marginRight: 1 }} />
-          {isEditMode ? "Update Supplier" : "Add Supplier"}
+          {isEditMode ? "Update Patient" : "Add Patient"}
         </DialogTitle>
         <form
           onSubmit={handleSubmit(submitForm)}
@@ -110,31 +123,31 @@ function SupplierDashboard() {
         >
           <DialogContent>
             <DialogContentText>
-              Please fill out the form to add a new supplier.
+              Please fill out the form to add a new patient.
             </DialogContentText>
             <TextField
               required
               autoFocus
               margin="dense"
-              id="supplierName"
-              label="Supplier Name"
+              id="patientName"
+              label="Patient Name"
               type="text"
               fullWidth
               variant="standard"
-              {...register("supplier_name", {
-                required: "Supplier Name is required",
+              {...register("customer_name", {
+                required: "Patient Name is required",
               })}
             />
             <TextField
               required
               margin="dense"
-              id="supplierContact"
-              label="Supplier Contact"
+              id="patientAge"
+              label="Patient Age"
               type="number"
               fullWidth
               variant="standard"
-              {...register("supplier_contact", {
-                required: "Supplier Age is required",
+              {...register("customer_age", {
+                required: "Patient Age is required",
                 valueAsNumber: true,
               })}
             />
@@ -142,13 +155,13 @@ function SupplierDashboard() {
               required
               autoFocus
               margin="dense"
-              id="email"
-              label="Supplier Email"
+              id="patientContact"
+              label="Patient Contact Number"
               type="text"
               fullWidth
               variant="standard"
-              {...register("email", {
-                required: "Supplier Email is required",
+              {...register("customer_contact", {
+                required: "Patient Name is required",
               })}
             />
           </DialogContent>
@@ -159,8 +172,7 @@ function SupplierDashboard() {
             <Button
               type="submit"
               variant="contained"
-              sx={{ backgroundColor: "#064e3b" }}
-            >
+              sx={{ backgroundColor: "#064e3b" }}>
               {isEditMode ? "Update" : "Add"}
             </Button>
           </DialogActions>
@@ -169,5 +181,4 @@ function SupplierDashboard() {
     </Container>
   );
 }
-
-export default SupplierDashboard;
+export default DrugsDashboard;

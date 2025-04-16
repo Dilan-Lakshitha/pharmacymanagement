@@ -1,152 +1,86 @@
-import { FC, ChangeEvent, useState, JSX } from 'react';
-import { format } from 'date-fns';
-import PropTypes from 'prop-types';
 import {
-  Tooltip,
-  Divider,
   Box,
-  FormControl,
-  InputLabel,
   Card,
+  CardHeader,
   Checkbox,
+  Divider,
   IconButton,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TablePagination,
   TableRow,
-  TableContainer,
-  Select,
-  MenuItem,
-  Typography,
+  TextField,
   useTheme,
-  CardHeader
-} from '@mui/material';
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { FC, useState, ChangeEvent } from "react";
+import { toast } from "sonner";
+import { AppDispatch } from "../../../../redux-store/stores/store";
+import { useDispatch } from "react-redux";
+import { deletePatient } from "../../../../shared/service/patinetService";
 
-import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
-import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-
-interface RecentOrdersTableProps {
+interface PatinetTableProps {
   className?: string;
-  cryptoOrders: any[];
+  Patinets: any[];
+  onEdit: (patient: any) => void;
 }
 
 interface Filters {
-  status?: any;
+  name?: string;
 }
 
-// const getStatusLabel = (cryptoOrderStatus: any): JSX.Element => {
-//   const map = {
-//     failed: {
-//       text: 'Failed',
-//       color: 'error'
-//     },
-//     completed: {
-//       text: 'Completed',
-//       color: 'success'
-//     },
-//     pending: {
-//       text: 'Pending',
-//       color: 'warning'
-//     }
-//   };
-
-//   const { text, color }: any = map[cryptoOrderStatus];
-
-//   return <Label color={color}>{text}</Label>;
-// };
-
-const applyFilters = (
-  cryptoOrders: any[],
-  filters: Filters
-): any[] => {
-  return cryptoOrders.filter((cryptoOrder) => {
+const applyFilters = (Patinets: any[], filters: Filters): any[] => {
+  return Patinets.filter((patient) => {
     let matches = true;
-
-    if (filters.status && cryptoOrder.status !== filters.status) {
+    if (
+      filters.name &&
+      !patient.customer_name.toLowerCase().includes(filters.name.toLowerCase())
+    ) {
       matches = false;
     }
-
     return matches;
   });
 };
 
 const applyPagination = (
-  cryptoOrders: any[],
+  Patinets: any[],
   page: number,
   limit: number
 ): any[] => {
-  return cryptoOrders.slice(page * limit, page * limit + limit);
+  return Patinets.slice(page * limit, page * limit + limit);
 };
 
-const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders = [] }) => {
-  const [selectedCryptoOrders, setSelectedCryptoOrders] = useState<string[]>(
-    []
-  );
-  const selectedBulkActions = selectedCryptoOrders.length > 0;
+const PatinetTable: FC<PatinetTableProps> = ({
+  Patinets = [],
+  onEdit,
+}) => {
+  const [selectedPatients, setSelectedPatients] = useState<string[]>([]);
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
-  const [filters, setFilters] = useState<Filters>({
-    status: null
-  });
+  const [filters, setFilters] = useState<Filters>({ name: "" });
+  const dispath: AppDispatch = useDispatch();
 
-  const statusOptions = [
-    {
-      id: 'all',
-      name: 'All'
-    },
-    {
-      id: 'completed',
-      name: 'Completed'
-    },
-    {
-      id: 'pending',
-      name: 'Pending'
-    },
-    {
-      id: 'failed',
-      name: 'Failed'
-    }
-  ];
-
-  const handleStatusChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    let value = null;
-
-    if (e.target.value !== 'all') {
-      value = e.target.value;
-    }
-
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      status: value
-    }));
+  const handleNameFilterChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFilters({ ...filters, name: e.target.value });
   };
 
-  const handleSelectAllCryptoOrders = (
-    event: ChangeEvent<HTMLInputElement>
-  ): void => {
-    setSelectedCryptoOrders(
-      event.target.checked
-        ? cryptoOrders.map((cryptoOrder) => cryptoOrder.id)
-        : []
+  const handleSelectAll = (event: ChangeEvent<HTMLInputElement>): void => {
+    setSelectedPatients(
+      event.target.checked ? Patinets.map((p) => p.customer_id) : []
     );
   };
 
-  const handleSelectOneCryptoOrder = (
+  const handleSelectOne = (
     event: ChangeEvent<HTMLInputElement>,
-    cryptoOrderId: string
+    id: string
   ): void => {
-    if (!selectedCryptoOrders.includes(cryptoOrderId)) {
-      setSelectedCryptoOrders((prevSelected) => [
-        ...prevSelected,
-        cryptoOrderId
-      ]);
-    } else {
-      setSelectedCryptoOrders((prevSelected) =>
-        prevSelected.filter((id) => id !== cryptoOrderId)
-      );
-    }
+    setSelectedPatients((prev) =>
+      event.target.checked ? [...prev, id] : prev.filter((pid) => pid !== id)
+    );
   };
 
   const handlePageChange = (event: any, newPage: number): void => {
@@ -157,50 +91,35 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders = [] }) =>
     setLimit(parseInt(event.target.value));
   };
 
-  const filteredCryptoOrders = applyFilters(cryptoOrders, filters);
-  const paginatedCryptoOrders = applyPagination(
-    filteredCryptoOrders,
-    page,
-    limit
-  );
-  const selectedSomeCryptoOrders =
-    selectedCryptoOrders.length > 0 &&
-    selectedCryptoOrders.length < cryptoOrders.length;
-  const selectedAllCryptoOrders =
-    selectedCryptoOrders.length === cryptoOrders.length;
-  const theme = useTheme();
+  const filteredPatients = applyFilters(Patinets, filters);
+  const paginatedPatients = applyPagination(filteredPatients, page, limit);
+  const selectedSome =
+    selectedPatients.length > 0 && selectedPatients.length < Patinets.length;
+  const selectedAll = selectedPatients.length === Patinets.length;
+
+  const handleDelete = (id: number) => {
+    try {
+      dispath(deletePatient(id));
+      toast.success("Patient updated successfully! 🎉");
+    } catch {
+      toast.error("Operation failed. Please check your network.");
+    }
+  };
 
   return (
     <Card>
-      {selectedBulkActions && (
-        <Box flex={1} p={2}>
-          {/* <BulkActions /> */}
-        </Box>
-      )}
-      {!selectedBulkActions && (
-        <CardHeader
-          action={
-            <Box width={150}>
-              <FormControl fullWidth variant="outlined">
-                <InputLabel>Status</InputLabel>
-                <Select
-                  value={filters.status || 'all'}
-                //   onChange={handleStatusChange}
-                  label="Status"
-                  autoWidth
-                >
-                  {statusOptions.map((statusOption) => (
-                    <MenuItem key={statusOption.id} value={statusOption.id}>
-                      {statusOption.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Box>
-          }
-          title="Recent Orders"
-        />
-      )}
+      <CardHeader
+        title="Patient Details"
+        action={
+          <TextField
+            label="Search by Name"
+            variant="outlined"
+            size="small"
+            value={filters.name}
+            onChange={handleNameFilterChange}
+          />
+        }
+      />
       <Divider />
       <TableContainer>
         <Table>
@@ -209,126 +128,48 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders = [] }) =>
               <TableCell padding="checkbox">
                 <Checkbox
                   color="primary"
-                  checked={selectedAllCryptoOrders}
-                  indeterminate={selectedSomeCryptoOrders}
-                  onChange={handleSelectAllCryptoOrders}
+                  checked={selectedAll}
+                  indeterminate={selectedSome}
+                  onChange={handleSelectAll}
                 />
               </TableCell>
-              <TableCell>Order Details</TableCell>
-              <TableCell>Order ID</TableCell>
-              <TableCell>Source</TableCell>
-              <TableCell align="right">Amount</TableCell>
-              <TableCell align="right">Status</TableCell>
-              <TableCell align="right">Actions</TableCell>
+              <TableCell>ID</TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Age</TableCell>
+              <TableCell>Contact</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedCryptoOrders.map((cryptoOrder) => {
-              const isCryptoOrderSelected = selectedCryptoOrders.includes(
-                cryptoOrder.id
+            {paginatedPatients.map((patient) => {
+              const isSelected = selectedPatients.includes(
+                patient.customer_id.toString()
               );
               return (
-                <TableRow
-                  hover
-                  key={cryptoOrder.id}
-                  selected={isCryptoOrderSelected}
-                >
+                <TableRow key={patient.customer_id} selected={isSelected} hover>
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
-                      checked={isCryptoOrderSelected}
-                      onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                        handleSelectOneCryptoOrder(event, cryptoOrder.id)
+                      checked={isSelected}
+                      onChange={(e) =>
+                        handleSelectOne(e, patient.customer_id.toString())
                       }
-                      value={isCryptoOrderSelected}
                     />
                   </TableCell>
+                  <TableCell>{patient.customer_id}</TableCell>
+                  <TableCell>{patient.customer_name}</TableCell>
+                  <TableCell>{patient.customer_age}</TableCell>
+                  <TableCell>{patient.customer_contact}</TableCell>
                   <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
+                    <IconButton color="primary" onClick={() => onEdit(patient)}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      color="error"
+                      onClick={() => handleDelete(patient.customer_id)}
                     >
-                      {cryptoOrder.orderDetails}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {format(cryptoOrder.orderDate, 'MMMM dd yyyy')}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
-                      {cryptoOrder.orderID}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
-                      {cryptoOrder.sourceName}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {cryptoOrder.sourceDesc}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Typography
-                      variant="body1"
-                      fontWeight="bold"
-                      color="text.primary"
-                      gutterBottom
-                      noWrap
-                    >
-                      {cryptoOrder.amountCrypto}
-                      {cryptoOrder.cryptoCurrency}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap>
-                      {/* {numeral(cryptoOrder.amount).format(
-                        `${cryptoOrder.currency}0,0.00`
-                      )} */}
-                    </Typography>
-                  </TableCell>
-                  <TableCell align="right">
-                    {/* {getStatusLabel(cryptoOrder.status)} */}
-                  </TableCell>
-                  <TableCell align="right">
-                    <Tooltip title="Edit Order" arrow>
-                      <IconButton
-                        sx={{
-                          '&:hover': {
-                            background: theme.colors.primary.lighter
-                          },
-                          color: theme.palette.primary.main
-                        }}
-                        color="inherit"
-                        size="small"
-                      >
-                        <EditTwoToneIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete Order" arrow>
-                      <IconButton
-                        sx={{
-                          '&:hover': { background: theme.colors.error.lighter },
-                          color: theme.palette.error.main
-                        }}
-                        color="inherit"
-                        size="small"
-                      >
-                        <DeleteTwoToneIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
+                      <DeleteIcon />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               );
@@ -339,19 +180,16 @@ const RecentOrdersTable: FC<RecentOrdersTableProps> = ({ cryptoOrders = [] }) =>
       <Box p={2}>
         <TablePagination
           component="div"
-          count={filteredCryptoOrders.length}
+          count={filteredPatients.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}
           rowsPerPage={limit}
-          rowsPerPageOptions={[5, 10, 25, 30]}
+          rowsPerPageOptions={[5, 10, 25]}
         />
       </Box>
     </Card>
   );
 };
 
-RecentOrdersTable.propTypes = {
-};
-
-export default RecentOrdersTable;
+export default PatinetTable;

@@ -21,24 +21,24 @@ import { FC, useState, ChangeEvent } from "react";
 import { toast } from "sonner";
 import { AppDispatch } from "../../../../redux-store/stores/store";
 import { useDispatch } from "react-redux";
-import { deletesupplier } from "../../../../shared/service/supplierService";
+import { deletePatient } from "../../../../shared/service/patinetService";
 
-interface SupplierTableProps {
+interface PatinetTableProps {
   className?: string;
-  Suppliers: any[];
-  onEdit: (supplier: any) => void;
+  Patinets: any[];
+  onEdit: (patient: any) => void;
 }
 
 interface Filters {
   name?: string;
 }
 
-const applyFilters = (Suppliers: any[], filters: Filters): any[] => {
-  return Suppliers.filter((supplier) => {
+const applyFilters = (Patinets: any[], filters: Filters): any[] => {
+  return Patinets.filter((patient) => {
     let matches = true;
     if (
       filters.name &&
-      !supplier.customer_name.toLowerCase().includes(filters.name.toLowerCase())
+      !patient.customer_name.toLowerCase().includes(filters.name.toLowerCase())
     ) {
       matches = false;
     }
@@ -47,18 +47,18 @@ const applyFilters = (Suppliers: any[], filters: Filters): any[] => {
 };
 
 const applyPagination = (
-  Suppliers: any[],
+  Patinets: any[],
   page: number,
   limit: number
 ): any[] => {
-  return Suppliers.slice(page * limit, page * limit + limit);
+  return Patinets.slice(page * limit, page * limit + limit);
 };
 
-const SupplierTable: FC<SupplierTableProps> = ({
-  Suppliers = [],
+const DrugsTable: FC<PatinetTableProps> = ({
+  Patinets = [],
   onEdit,
 }) => {
-  const [selectedsuppliers, setSelectedsuppliers] = useState<string[]>([]);
+  const [selectedPatients, setSelectedPatients] = useState<string[]>([]);
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [filters, setFilters] = useState<Filters>({ name: "" });
@@ -69,8 +69,8 @@ const SupplierTable: FC<SupplierTableProps> = ({
   };
 
   const handleSelectAll = (event: ChangeEvent<HTMLInputElement>): void => {
-    setSelectedsuppliers(
-      event.target.checked ? Suppliers.map((p) => p.supplier_id) : []
+    setSelectedPatients(
+      event.target.checked ? Patinets.map((p) => p.customer_id) : []
     );
   };
 
@@ -78,7 +78,7 @@ const SupplierTable: FC<SupplierTableProps> = ({
     event: ChangeEvent<HTMLInputElement>,
     id: string
   ): void => {
-    setSelectedsuppliers((prev) =>
+    setSelectedPatients((prev) =>
       event.target.checked ? [...prev, id] : prev.filter((pid) => pid !== id)
     );
   };
@@ -91,17 +91,16 @@ const SupplierTable: FC<SupplierTableProps> = ({
     setLimit(parseInt(event.target.value));
   };
 
-  const filteredsuppliers = applyFilters(Suppliers, filters);
-  const paginatedsuppliers = applyPagination(filteredsuppliers, page, limit);
+  const filteredPatients = applyFilters(Patinets, filters);
+  const paginatedPatients = applyPagination(filteredPatients, page, limit);
   const selectedSome =
-    selectedsuppliers.length > 0 && selectedsuppliers.length < Suppliers.length;
-  const selectedAll = selectedsuppliers.length === Suppliers.length;
-
+    selectedPatients.length > 0 && selectedPatients.length < Patinets.length;
+  const selectedAll = selectedPatients.length === Patinets.length;
 
   const handleDelete = (id: number) => {
     try {
-      dispath(deletesupplier(id));
-      toast.success("supplier updated successfully! 🎉");
+      dispath(deletePatient(id));
+      toast.success("Patient updated successfully! 🎉");
     } catch {
       toast.error("Operation failed. Please check your network.");
     }
@@ -110,7 +109,7 @@ const SupplierTable: FC<SupplierTableProps> = ({
   return (
     <Card>
       <CardHeader
-        title="supplier Details"
+        title="Patient Details"
         action={
           <TextField
             label="Search by Name"
@@ -136,38 +135,38 @@ const SupplierTable: FC<SupplierTableProps> = ({
               </TableCell>
               <TableCell>ID</TableCell>
               <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
+              <TableCell>Age</TableCell>
               <TableCell>Contact</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {paginatedsuppliers.map((supplier) => {
-              const isSelected = selectedsuppliers.includes(
-                supplier.supplier_id.toString()
+            {paginatedPatients.map((patient) => {
+              const isSelected = selectedPatients.includes(
+                patient.customer_id.toString()
               );
               return (
-                <TableRow key={supplier.supplier_id} selected={isSelected} hover>
+                <TableRow key={patient.customer_id} selected={isSelected} hover>
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
                       checked={isSelected}
                       onChange={(e) =>
-                        handleSelectOne(e, supplier.supplier_id.toString())
+                        handleSelectOne(e, patient.customer_id.toString())
                       }
                     />
                   </TableCell>
-                  <TableCell>{supplier.supplier_id}</TableCell>
-                  <TableCell>{supplier.supplier_name}</TableCell>
-                  <TableCell>{supplier.email}</TableCell>
-                  <TableCell>{supplier.supplier_contact}</TableCell>
+                  <TableCell>{patient.customer_id}</TableCell>
+                  <TableCell>{patient.customer_name}</TableCell>
+                  <TableCell>{patient.customer_age}</TableCell>
+                  <TableCell>{patient.customer_contact}</TableCell>
                   <TableCell>
-                    <IconButton color="primary" onClick={() => onEdit(supplier)}>
+                    <IconButton color="primary" onClick={() => onEdit(patient)}>
                       <EditIcon />
                     </IconButton>
                     <IconButton
                       color="error"
-                      onClick={() => handleDelete(supplier.supplier_id)}
+                      onClick={() => handleDelete(patient.customer_id)}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -181,7 +180,7 @@ const SupplierTable: FC<SupplierTableProps> = ({
       <Box p={2}>
         <TablePagination
           component="div"
-          count={filteredsuppliers.length}
+          count={filteredPatients.length}
           onPageChange={handlePageChange}
           onRowsPerPageChange={handleLimitChange}
           page={page}
@@ -193,4 +192,4 @@ const SupplierTable: FC<SupplierTableProps> = ({
   );
 };
 
-export default SupplierTable;
+export default DrugsTable;

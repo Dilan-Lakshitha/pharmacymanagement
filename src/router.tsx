@@ -8,6 +8,7 @@ import SignUpForm from "./auth/signUp/signUp";
 import MainDashboard from "./content/main-dashboard/main-dashboard";
 import PatientDashboard from "./content/overview/Patinet/Dashboard/index";
 import SupplierDashboard from "./content/overview/supplier/supplierDashboard/supplier";
+import DrugsDashboard from "./content/overview/drugs/drugDashboard/drugs";
 
 const isAuthenticated = () => {
   return !!localStorage.getItem("authToken");
@@ -56,6 +57,10 @@ const routes: RouteObject[] = [
           {
             path: 'supplier',
             element: <SupplierDashboard />
+          },
+          {
+            path: 'drugs',
+            element: <DrugsDashboard />
           }
         ]
       }

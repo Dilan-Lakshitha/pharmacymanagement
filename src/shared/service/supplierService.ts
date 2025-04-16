@@ -1,12 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { axiosApi } from "./userSetting";
 
-export const patientRegister = createAsyncThunk(
-    'patinet/register',
+export const supplierRegister = createAsyncThunk(
+    'supplier/register',
     async (payload: any, { rejectWithValue }) => {
         const api = axiosApi
         try {
-            const response = await api.post('Patinet/patinetRegister', payload);
+            const response = await api.post('Supplier/supplierCreate', payload);
             return response.data;
         } catch (error:any) {
             if (error.response) {
@@ -18,12 +18,12 @@ export const patientRegister = createAsyncThunk(
     }
 );
 
-export const patients = createAsyncThunk(
-    'patinets',
+export const suppliers = createAsyncThunk(
+    'suppliers',
     async (_, { rejectWithValue }) => {
         const api = axiosApi
         try {
-            const response = await api.get('Patinet/patients');
+            const response = await api.get('Supplier/supplierList');
             return response.data;
         } catch (error:any) {
             if (error.response) {
@@ -35,13 +35,13 @@ export const patients = createAsyncThunk(
     }
 );
 
-export const Updatepatients = createAsyncThunk(
-    'Updatepatinets',
-    async (patient:any, { rejectWithValue }) => {
-        console.log('patient', patient);
+export const Updatesuppliers = createAsyncThunk(
+    'Updatesuppliers',
+    async (supplier:any, { rejectWithValue }) => {
+        console.log('supplier', supplier);
         const api = axiosApi
         try {
-            const response = await api.put(`Patinet/updatePatient/${patient.customer_id}`, patient);
+            const response = await api.put(`Supplier/updatesupplier/${supplier.supplier_id}`, supplier);
             return response.data;
         } catch (error:any) {
             if (error.response) {
@@ -53,12 +53,12 @@ export const Updatepatients = createAsyncThunk(
     }
 );
 
-export const deletePatient = createAsyncThunk(
-    'Deletepatinets',
-    async (patientId:number, { rejectWithValue }) => {
+export const deletesupplier = createAsyncThunk(
+    'Deletesuppliers',
+    async (supplierId:number, { rejectWithValue }) => {
         const api = axiosApi
         try {
-            const response = await api.delete(`Patinet/deletePatinet/${patientId}`);
+            const response = await api.delete(`Supplier/${supplierId}`);
             return response.data;
         } catch (error:any) {
             if (error.response) {
@@ -69,4 +69,3 @@ export const deletePatient = createAsyncThunk(
         }
     }
 );
-
