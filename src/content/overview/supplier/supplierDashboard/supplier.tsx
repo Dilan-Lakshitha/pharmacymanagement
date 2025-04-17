@@ -81,6 +81,29 @@ function SupplierDashboard() {
 
   return (
     <Container maxWidth="xl" sx={{ textAlign: "center" }}>
+      <h1
+        style={{
+          color: "black",
+          fontSize: "2rem",
+          fontWeight: "bold",
+          marginBottom: "2px",
+          display: "flex",
+          justifyContent: "flex-start",
+        }}
+      >
+        Supplier Dashboard
+      </h1>
+      <h3
+        style={{
+          color: "black",
+          fontSize: "1.5rem",
+          marginBottom: "10px",
+          display: "flex",
+          justifyContent: "flex-start",
+        }}
+      >
+        Add and manage your supplier here
+      </h3>
       <Grid spacing={{ xs: 0, md: 2 }}>
         <Grid item md={10} lg={0} mx="auto" alignItems="end">
           <Box sx={{ display: "flex", justifyContent: "flex-end" }}>

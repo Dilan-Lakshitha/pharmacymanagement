@@ -9,6 +9,7 @@ import MainDashboard from "./content/main-dashboard/main-dashboard";
 import PatientDashboard from "./content/overview/Patinet/Dashboard/index";
 import SupplierDashboard from "./content/overview/supplier/supplierDashboard/supplier";
 import DrugsDashboard from "./content/overview/drugs/drugDashboard/drugs";
+import InvoiceComponent from "./content/overview/invoce/invoice";
 
 const isAuthenticated = () => {
   return !!localStorage.getItem("authToken");
@@ -49,7 +50,7 @@ const routes: RouteObject[] = [
       {
         path: 'dashboard',
         element: <MainDashboard />,
-        children: [
+      },
           {
             path: 'patinet',
             element: <PatientDashboard />
@@ -61,9 +62,11 @@ const routes: RouteObject[] = [
           {
             path: 'drugs',
             element: <DrugsDashboard />
+          },
+          {
+            path: 'purchase',
+            element: <InvoiceComponent/>
           }
-        ]
-      }
     ]
   }
 ];

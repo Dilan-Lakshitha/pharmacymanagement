@@ -6,6 +6,7 @@ import { FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist
 import patinetReducer from '../reducers/patinet-reducer';
 import supplierReducer from '../reducers/supplier-reducer';
 import drugReducer from '../reducers/drug-reducer';
+import invoiceReducer from '../reducers/invoice-reducer';
 
 
 const persistConfig = {
@@ -21,6 +22,7 @@ export const store = configureStore({
     patinet:patinetReducer,
     supplier:supplierReducer,
     drug: drugReducer,
+    invoice: invoiceReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

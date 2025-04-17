@@ -114,7 +114,7 @@ const PatinetTable: FC<PatinetTableProps> = ({
           <TextField
             label="Search by Name"
             variant="outlined"
-            size="small"
+            size="medium"
             value={filters.name}
             onChange={handleNameFilterChange}
           />
