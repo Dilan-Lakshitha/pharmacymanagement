@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext } from "react";
 
 import {
   ListSubheader,
@@ -7,15 +7,15 @@ import {
   List,
   styled,
   Button,
-  ListItem
-} from '@mui/material';
-import { NavLink as RouterLink } from 'react-router-dom';
-import { SidebarContext } from '../../../../contexts/SidebarContext';
-import LocalShippingTwoToneIcon from '@mui/icons-material/LocalShippingTwoTone';
-import PeopleAltTwoToneIcon from '@mui/icons-material/PeopleAltTwoTone';
-import MedicationTwoToneIcon from '@mui/icons-material/MedicationTwoTone';
-import DashboardCustomizeTwoToneIcon from '@mui/icons-material/DashboardCustomizeTwoTone';
-import ShoppingCartTwoToneIcon from '@mui/icons-material/ShoppingCartTwoTone';
+  ListItem,
+} from "@mui/material";
+import { NavLink as RouterLink } from "react-router-dom";
+import { SidebarContext } from "../../../../contexts/SidebarContext";
+import LocalShippingTwoToneIcon from "@mui/icons-material/LocalShippingTwoTone";
+import PeopleAltTwoToneIcon from "@mui/icons-material/PeopleAltTwoTone";
+import MedicationTwoToneIcon from "@mui/icons-material/MedicationTwoTone";
+import DashboardCustomizeTwoToneIcon from "@mui/icons-material/DashboardCustomizeTwoTone";
+import ShoppingCartTwoToneIcon from "@mui/icons-material/ShoppingCartTwoTone";
 
 const MenuWrapper = styled(Box)(
   ({ theme }) => `
@@ -68,7 +68,7 @@ const SubMenuWrapper = styled(Box)(
 
           .MuiButton-startIcon,
           .MuiButton-endIcon {
-            transition: ${theme.transitions.create(['color'])};
+            transition: ${theme.transitions.create(["color"])};
 
             .MuiSvgIcon-root {
               font-size: inherit;
@@ -132,8 +132,8 @@ const SubMenuWrapper = styled(Box)(
                 background: ${theme.colors.alpha.trueWhite[100]};
                 opacity: 0;
                 transition: ${theme.transitions.create([
-                  'transform',
-                  'opacity'
+                  "transform",
+                  "opacity",
                 ])};
                 width: 6px;
                 height: 6px;
@@ -165,7 +165,14 @@ function SidebarMenu() {
   return (
     <>
       <MenuWrapper>
-      <List component="div">
+        <List
+          component="div"
+          subheader={
+            <ListSubheader component="div" disableSticky>
+              Main
+            </ListSubheader>
+          }
+        >
           <SubMenuWrapper>
             <List component="div">
               <ListItem component="div">
@@ -173,7 +180,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  size='large'
+                  size="large"
                   variant="contained"
                   to="/dashboard"
                   startIcon={<DashboardCustomizeTwoToneIcon />}
@@ -188,7 +195,7 @@ function SidebarMenu() {
           component="div"
           subheader={
             <ListSubheader component="div" disableSticky>
-              Overview
+              Management
             </ListSubheader>
           }
         >
@@ -199,7 +206,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  size='large'
+                  size="large"
                   variant="contained"
                   to="/patinet"
                   startIcon={<PeopleAltTwoToneIcon />}
@@ -208,13 +215,12 @@ function SidebarMenu() {
                 </Button>
               </ListItem>
 
-
               <ListItem component="div">
                 <Button
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  size='large'
+                  size="large"
                   variant="contained"
                   to="/supplier"
                   startIcon={<LocalShippingTwoToneIcon />}
@@ -228,7 +234,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  size='large'
+                  size="large"
                   variant="contained"
                   to="/drugs"
                   startIcon={<MedicationTwoToneIcon />}
@@ -236,12 +242,25 @@ function SidebarMenu() {
                   Drugs
                 </Button>
               </ListItem>
+            </List>
+          </SubMenuWrapper>
+        </List>
 
+        <List
+          component="div"
+          subheader={
+            <ListSubheader component="div" disableSticky>
+              Purchases
+            </ListSubheader>
+          }
+        >
+          <SubMenuWrapper>
+            <List component="div">
               <ListItem component="div">
                 <Button
                   disableRipple
                   component={RouterLink}
-                  size='large'
+                  size="large"
                   variant="contained"
                   onClick={closeSidebar}
                   to="/purchase"

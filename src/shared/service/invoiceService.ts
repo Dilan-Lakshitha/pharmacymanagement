@@ -43,3 +43,15 @@ export const getInvoiceDetails = createAsyncThunk(
     }
   }
 );
+
+export const getInvoiceList = createAsyncThunk(
+  "invoice/get",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosApi.get(`invoice/latest/${10}`);
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || "Unknown error");
+    }
+  }
+);

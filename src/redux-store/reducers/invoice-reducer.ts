@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { InvoiceState } from "../../shared/models/invoice-model";
 import { deletedrug, drugRegister, drugs, Updatedrugs } from "../../shared/service/drugService";
-import { addToCartAsync, generateInvoice, getInvoiceDetails } from "../../shared/service/invoiceService";
+import { addToCartAsync, generateInvoice, getInvoiceDetails, getInvoiceList } from "../../shared/service/invoiceService";
 
 const initialState: InvoiceState = {
     cart: [],
@@ -10,6 +10,7 @@ const initialState: InvoiceState = {
     error: "",
     invoice: null,
     invoiceId: null,
+    invoiceList: [],
   };
   
   const invoiceSlice = createSlice({
@@ -63,6 +64,22 @@ const initialState: InvoiceState = {
           state.invoice = action.payload;
         })
         .addCase(getInvoiceDetails.rejected, (state, action) => {
+          state.loading = false;
+          state.success = false;
+          state.error = action.payload as string;
+        })
+
+        .addCase(getInvoiceList.pending, (state) => {
+          state.loading = true;
+          state.success = false;
+          state.error = "";
+        })
+        .addCase(getInvoiceList.fulfilled, (state, action) => {
+          state.loading = false;
+          state.success = true;
+          state.invoiceList = action.payload;
+        })
+        .addCase(getInvoiceList.rejected, (state, action) => {
           state.loading = false;
           state.success = false;
           state.error = action.payload as string;

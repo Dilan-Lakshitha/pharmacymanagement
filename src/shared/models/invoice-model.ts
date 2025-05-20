@@ -12,4 +12,5 @@ export interface CartItem {
     error: string;
     invoice: any;
     invoiceId: any;
+    invoiceList: any;
   }

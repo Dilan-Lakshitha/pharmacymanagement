@@ -22,7 +22,7 @@ const LogoText = styled(Box)(
 
 function Logo() {
   return (
-    <LogoWrapper to="/overview">
+    <LogoWrapper to="/dashboard">
       <img src={pharmacyLogo} alt="Logo" style={{ width: '200px', height: '100px' }} />
       <LogoText>MediCare</LogoText>
     </LogoWrapper>

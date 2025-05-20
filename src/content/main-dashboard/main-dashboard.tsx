@@ -19,10 +19,13 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import InvoiceTable from "./InvoiceTable";
+import { getInvoiceList } from "../../shared/service/invoiceService";
 
 function MainDashboard() {
   const { patinet } = useSelector((state: any) => state.patinet);
   const { drug } = useSelector((state: any) => state.drug);
+  const { invoiceList } = useSelector((state: any) => state.invoice);
   const { supplier } = useSelector((state: any) => state.supplier);
   const dispath: AppDispatch = useDispatch();
   const getPatientsCalled = useRef(false);
@@ -37,9 +40,17 @@ function MainDashboard() {
       dispath(patients());
       dispath(drugs());
       dispath(suppliers());
+      dispath(getInvoiceList());
       getPatientsCalled.current = true;
     }
   }, [dispath]);
+
+  console.log("patinet", patinet);
+  const handleEdit = (drug: any) => {
+    // setSelecteddrug(drug);
+    // setIsEditMode(true);
+    // setOpen(true);
+  };
 
   return (
     <Container maxWidth="xl" className="mt-2">
@@ -96,12 +107,22 @@ function MainDashboard() {
           </Card>
         </Grid>
 
-        <Grid item xs={12} md={4}>
-          <Card sx={{ mt: 4, p: 2 }}>
+        <Grid item md={6}>
+          <Card>
+            <InvoiceTable
+              Invoices={invoiceList || []}
+              onEdit={handleEdit}
+              patinetList={patinet}
+            />
+          </Card>
+        </Grid>
+
+        <Grid item md={6}>
+          <Card sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>
               Statistics Overview
             </Typography>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={395}>
               <BarChart data={data}>
                 <XAxis dataKey="name" />
                 <YAxis />
@@ -113,9 +134,7 @@ function MainDashboard() {
         </Grid>
       </Grid>
 
-      <Card sx={{ p: 2, mb: 10, borderRadius: 1 }}>
-        <Outlet />
-      </Card>
+      <Outlet />
     </Container>
   );
 }
